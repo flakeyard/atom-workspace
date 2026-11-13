@@ -1,0 +1,4 @@
+{
+  "image": "ghcr.io/flakeyard/image-devcontainer:v0.1.10@sha256:ceff57885d725033e9a840c5baff75243af98af2a076de8c0cc93d9c0b7303cc",
+  "postCreateCommand": "direnv allow"
+}

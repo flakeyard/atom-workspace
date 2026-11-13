@@ -4,5 +4,5 @@
 _atomInputs: {
   key = toString ./default.nix;
   _file = ./default.nix;
-  imports = [ ];
+  imports = [ ./shell.nix ];
 }
