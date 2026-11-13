@@ -1,5 +1,5 @@
-# CI of this repository: workflow-check, which checks the pull request title
-# and renovate.json; the checks of dev/flake.nix come with the code.
+# CI of this repository: workflow-check, which builds the checks of
+# dev/flake.nix, the tests of the atom and its checks of this repository.
 name: test
 
 on:
@@ -32,8 +32,16 @@ jobs:
       statuses: write # commit statuses of dispatched runs
     with:
       needs: ${{ toJSON(needs) }}
-      # No flake yet.
-      flake: ""
+      flake: ./dev
+      expect-checks: >-
+        ["treefmt"]
+      # The tests against the current upstream revisions (FY-0017, FY-0038).
+      override-inputs: >-
+        ${{ github.event_name == 'schedule'
+            && '{"nixpkgs": "github:NixOS/nixpkgs/nixos-26.05",
+                 "git-hooks": "github:cachix/git-hooks.nix/master",
+                 "treefmt-nix": "github:numtide/treefmt-nix/main"}'
+            || '{}' }}
       renovate-presets: '["flakeyard/renovate-config"]'
       # The default configurations of the atoms apply (FY-0037).
       forbid-tool-configs: true
