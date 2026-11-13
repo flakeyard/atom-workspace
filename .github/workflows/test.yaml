@@ -1,0 +1,39 @@
+# CI of this repository: workflow-check, which checks the pull request title
+# and renovate.json; the checks of dev/flake.nix come with the code.
+name: test
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, edited] # edited: the title check
+  push:
+    branches: [main, "release/v*"]
+  schedule:
+    - cron: "17 5 * * 1"
+  workflow_dispatch: # dispatched checks of release pull requests (FY-0030)
+
+permissions: {}
+
+concurrency:
+  group: test-${{ github.ref }}
+  # A title or description edit must not cancel a long run.
+  cancel-in-progress: >-
+    ${{ github.event_name == 'pull_request'
+        && github.event.action != 'edited' }}
+
+jobs:
+  check:
+    # Dispatched runs post their final status on every outcome.
+    if: ${{ !cancelled() || github.event_name == 'workflow_dispatch' }}
+    uses: flakeyard/workflow-check/.github/workflows/check.yaml@aa514199d5eb5231dfc42e70a99288fd79832311 # v0.4.0
+    permissions:
+      actions: read # own job name and the jobs of the run
+      contents: read # repository files through the contents API, checkout
+      pull-requests: read # the title of the pull request
+      statuses: write # commit statuses of dispatched runs
+    with:
+      needs: ${{ toJSON(needs) }}
+      # No flake yet.
+      flake: ""
+      renovate-presets: '["flakeyard/renovate-config"]'
+      # The default configurations of the atoms apply (FY-0037).
+      forbid-tool-configs: true
