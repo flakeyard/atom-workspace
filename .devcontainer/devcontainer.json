@@ -1,4 +1,6 @@
 {
-  "image": "ghcr.io/flakeyard/image-devcontainer:v0.1.10@sha256:ceff57885d725033e9a840c5baff75243af98af2a076de8c0cc93d9c0b7303cc",
-  "postCreateCommand": "direnv allow"
+  "image": "ghcr.io/flakeyard/image-devcontainer:v0.2.0@sha256:f3663a708c7317b57f2954b4cddca283d05eedfbe7ef5258353ff3419f8a9414",
+  "workspaceMount": "source=${localWorkspaceFolder},target=/home/dev/${localWorkspaceFolderBasename},type=bind",
+  "workspaceFolder": "/home/dev/${localWorkspaceFolderBasename}",
+  "postCreateCommand": "direnv allow && direnv exec . true"
 }
