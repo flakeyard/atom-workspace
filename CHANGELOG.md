@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.1](https://github.com/flakeyard/atom-workspace/compare/v0.1.0...v0.1.1) (2026-11-14)
+
+
+### Bug Fixes
+
+* bring the interactive bash into the shell ([#12](https://github.com/flakeyard/atom-workspace/issues/12)) ([e953334](https://github.com/flakeyard/atom-workspace/commit/e95333432de8fca12393b1c5b56c06a95e4fcd78))
+
 ## 0.1.0 (2026-11-14)
 
 
