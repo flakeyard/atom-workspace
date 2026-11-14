@@ -1,0 +1,29 @@
+# Releases this repository with flakeyard/workflow-release.
+name: release
+
+on:
+  push:
+    branches: [main, "release/v*"]
+
+permissions: {}
+
+jobs:
+  release:
+    uses: flakeyard/workflow-release/.github/workflows/release.yaml@a825b3f4d42c164f93b2ae4d1c03bc3112732504 # v0.2.6
+    # Required by the called workflow for every path; with the App, its token
+    # does the writes.
+    permissions:
+      contents: write # releases and tags without an App
+      issues: write # release-please labels
+      pull-requests: write # the release pull request
+      actions: write # dispatched checks without an App
+    with:
+      app-client-id: ${{ vars.BOT_CLIENT_ID }}
+      environment: release
+      move-major-tag: true
+      # Release pull requests by GITHUB_TOKEN; the key only in the gated job
+      # (FY-0030).
+      app-pull-requests: false
+      check-workflow: test.yaml
+    secrets:
+      APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
