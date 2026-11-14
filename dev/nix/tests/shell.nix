@@ -103,7 +103,9 @@
         "the hooks installed" =
           hooks.devShells.${system}.default.shellHook == pre-commit.installationScript;
         "no tool and no hooks without git-hooks.nix" =
-          (default [ ]).shellHook == "" && (default [ ]).nativeBuildInputs == [ ];
+          (default [ ]).shellHook == ""
+          && map (input: input.name) (default [ ]).nativeBuildInputs == [ pkgs.bashInteractive.name ];
+        "the interactive bash" = has "bashInteractive" composed;
         "a committed .pre-commit-config.yaml fails" = !committed [ inputs.git-hooks.flakeModule ];
         "a committed .pre-commit-config.yaml without git-hooks.nix" = committed [ ];
         "the devShells.default of the project wins" = has "jq" own && has "hello" own && own.FOO == "1";

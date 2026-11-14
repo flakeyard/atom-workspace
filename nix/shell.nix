@@ -79,10 +79,16 @@
         {
           inputsFrom = lib.attrValues fragments;
           env = lib.zipAttrsWith merge variables;
+          # The bash of stdenv, which mkShell puts first on PATH, is built
+          # without its interactive builtins (compgen, readline); scripts and
+          # people in the shell expect the full bash.
+          packages = [
+            pkgs.bashInteractive
+          ]
+          # The tool of the hooks, as the shellHook of git-hooks.nix adds it.
+          ++ lib.optional hooks config.pre-commit.settings.package;
         }
         // lib.optionalAttrs hooks {
-          # The tool of the hooks, as the shellHook of git-hooks.nix adds it.
-          packages = [ config.pre-commit.settings.package ];
           shellHook = config.pre-commit.installationScript;
         }
       );
