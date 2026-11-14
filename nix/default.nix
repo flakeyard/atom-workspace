@@ -7,5 +7,7 @@ _atomInputs: {
   imports = [
     ./generated.nix
     ./shell.nix
+    ./hooks.nix
+    ./treefmt.nix
   ];
 }
