@@ -75,7 +75,8 @@ default.
 
 `devShells.default` joins, through `inputsFrom`, every `devShells.flakeyard-*`
 and no other shell. `devShells.flakeyard-project` is reserved for the project's
-own tools:
+own tools: It also brings `bashInteractive`, since the bash of stdenv that
+`mkShell` puts first on `PATH` lacks builtins such as `compgen`.
 
 ```nix
 perSystem =

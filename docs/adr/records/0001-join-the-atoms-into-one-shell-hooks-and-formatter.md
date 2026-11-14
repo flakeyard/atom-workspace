@@ -107,6 +107,9 @@ tools and joined like the fragments of atoms.
   one compiler the shell is `mkShell` over that stdenv; with none it is
   `mkShellNoCC`; with more, evaluation fails with each compiler and the
   fragments that bring it.
+- **Bash.** The shell has `bashInteractive`: `mkShell` puts the bash of stdenv
+  first on `PATH`, which lacks the interactive builtins such as `compgen` that
+  scripts and people expect.
 - **Hooks.** With git-hooks.nix, the shell has the tool of the hooks,
   `pre-commit.settings.package`, and runs `pre-commit.installationScript` as its
   `shellHook`, which installs the hooks as described in the context each time
