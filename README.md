@@ -234,9 +234,10 @@ Open the repository in the flakeyard dev container: the editor reads
 
 The public [`flake.nix`](flake.nix) holds only the module ([FY-0017][fy-0017]).
 [`dev/flake.nix`](dev/flake.nix), with its own lock, imports git-hooks.nix,
-treefmt-nix and the atom as consumers do, and holds the tests:
+treefmt-nix and the atom as consumers do, with [atom-nix][atom-nix] and
+[atom-shell][atom-shell], and holds the tests:
 
-- `treefmt`: the atom's check of this repository;
+- `nix`, `shell`, `treefmt`: the checks of this repository;
 - `test-evaluation`: the atom alone, with git-hooks.nix, with treefmt-nix and
   with both, and the values it sets;
 - `test-shell`: the fragments, variables, compilers and hooks of the shell, the
@@ -269,9 +270,8 @@ git-hooks.nix and treefmt-nix with their current branches.
 [`release.yaml`](.github/workflows/release.yaml) releases the repository with
 [workflow-release][workflow-release].
 
-Before a pull request, also run nixfmt, statix, deadnix, prettier, markdownlint,
-typos and `reuse lint`; the atoms that will provide them are not released yet
-([FY-0038][fy-0038]).
+Before a pull request, also run prettier, markdownlint, typos and `reuse lint`;
+the atoms that will provide them are not released yet ([FY-0038][fy-0038]).
 
 ## License
 
@@ -294,5 +294,7 @@ typos and `reuse lint`; the atoms that will provide them are not released yet
 [fy-0038]:
   https://github.com/flakeyard/decisions/blob/main/docs/adr/records/0038-roll-out-the-atoms.md
 [versioning]: https://github.com/flakeyard/.github/blob/main/VERSIONING.md
+[atom-nix]: https://github.com/flakeyard/atom-nix
+[atom-shell]: https://github.com/flakeyard/atom-shell
 [workflow-check]: https://github.com/flakeyard/workflow-check
 [workflow-release]: https://github.com/flakeyard/workflow-release
