@@ -133,13 +133,21 @@ git-hooks.nix links `.pre-commit-config.yaml` at the top of the working tree to
 the configuration in the Nix store, removes the hooks of every stage, installs
 those of the configured stages and sets `core.hooksPath` to the `hooks`
 directory of the git directory that every worktree shares. It refuses to replace
-a `.pre-commit-config.yaml` that is a file. A project that takes the shell
-should:
+a `.pre-commit-config.yaml` that is a file. The shell then installs those hooks
+again with `--allow-missing-config`: they run in a checkout only after the shell
+was entered there. In a worktree without the link, a commit skips them with
+
+```text
+`.pre-commit-config.yaml` config file not found. Skipping `pre-commit`.
+```
+
+and CI still checks everything. A project that takes the shell should:
 
 - add `.direnv/` and `.pre-commit-config.yaml` to `.gitignore`;
 - commit inside the dev container ([FY-0012][fy-0012]): the hooks run tools by
   their paths in the store that built the shell, which the host may not have;
-- run `direnv allow` in every worktree, which links its own configuration;
+- run `direnv allow` in every worktree, which links its own configuration and
+  runs the hooks there;
 - run `direnv block` before checking out a branch it does not trust: entering
   the directory builds that branch's shell and runs its shell hook.
 
@@ -241,7 +249,8 @@ treefmt-nix and the atom as consumers do, with [atom-nix][atom-nix] and
 - `test-format`: in a git repository, the wrapper of treefmt run from a
   subdirectory and the hooks run by pre-commit format the project and leave the
   generated files untouched;
-- `test-install`: the shell hook installs the git hooks;
+- `test-install`: the shell hook installs the git hooks; with a linked worktree,
+  a commit in a checkout without the link skips them and one with it runs them;
 - `test-next-major`: the warning of the next major version.
 
 Run the same commands as CI:

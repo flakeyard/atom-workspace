@@ -69,7 +69,11 @@ flake-parts at `ea2630b7` and nixpkgs `nixos-26.05` showed:
   `addGcRoot` is false, removes the hooks of every stage, installs those of the
   configured stages and sets `core.hooksPath` to the `hooks` directory of the
   common git directory, which every worktree shares. It refuses to install over
-  a `.pre-commit-config.yaml` that is a file, and only warns.
+  a `.pre-commit-config.yaml` that is a file, and only warns. The shared hooks
+  then fail every commit in another worktree that has no link: "No
+  .pre-commit-config.yaml file was found". pre-commit refuses to install while
+  `core.hooksPath` is set; a hook installed with `--allow-missing-config` skips
+  a missing configuration with a message.
 - The installed hooks run tools by `/nix/store` paths of the store that built
   the shell.
 
@@ -113,16 +117,21 @@ tools and joined like the fragments of atoms.
 - **Hooks.** With git-hooks.nix, the shell has the tool of the hooks,
   `pre-commit.settings.package`, and runs `pre-commit.installationScript` as its
   `shellHook`, which installs the hooks as described in the context each time
-  the shell starts. Without git-hooks.nix it installs nothing.
+  the shell starts. While `pre-commit.settings.install.enable` is true, the
+  shell hook then installs again, with `--allow-missing-config` and the same
+  configuration path, every hook in the shared `hooks` directory that pre-commit
+  generated without it, for its hook type, and restores `core.hooksPath`. A
+  worktree without the link skips the hooks instead of failing; CI still checks
+  everything. Without git-hooks.nix it installs nothing.
 - **Committed configuration.** With git-hooks.nix, evaluation of the shell fails
   when the project's source has `.pre-commit-config.yaml`, which the
   installation would refuse to replace.
 
 The README tells projects to ignore `.direnv/` and `.pre-commit-config.yaml` in
 git, to commit inside the container, whose store has the tools of the hooks, to
-run `direnv allow` in every worktree, which links its own configuration, and to
-run `direnv block` before switching to a branch they do not trust, since
-entering the directory runs that branch's shell hook.
+run `direnv allow` in every worktree, which links its own configuration and runs
+the hooks there, and to run `direnv block` before switching to a branch they do
+not trust, since entering the directory runs that branch's shell hook.
 
 ### Generated files
 
@@ -202,7 +211,8 @@ own outputs, and its checks evaluate on x86_64-linux and aarch64-linux:
 - in a git repository in the sandbox: the wrapper run from a subdirectory and
   pre-commit leave the generated files untouched and format the others, and the
   installation script links the configuration, installs the hooks and sets
-  `core.hooksPath`;
+  `core.hooksPath`; with a linked worktree, a commit in a checkout without the
+  link skips the hooks and one with it runs them;
 - the warning of the next major version.
 
 ## Constraints
@@ -237,7 +247,8 @@ own outputs, and its checks evaluate on x86_64-linux and aarch64-linux:
   formatter.
 - (+) An unchanged tree is not formatted again in CI.
 - (−) The hooks are installed each time the shell starts in a new worktree, and
-  only there; a clone without `direnv allow` has no hooks.
+  run only in the checkouts where it started; a clone without `direnv allow` has
+  no hooks.
 - (−) A commit made outside the container fails when the host's store lacks the
   tools of the hooks.
 - (−) The atom depends on option names of git-hooks.nix and treefmt-nix that it
