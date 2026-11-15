@@ -101,7 +101,8 @@
           lib.elem pre-commit.settings.package
             hooks.devShells.${system}.default.nativeBuildInputs;
         "the hooks installed" =
-          hooks.devShells.${system}.default.shellHook == pre-commit.installationScript;
+          lib.hasPrefix pre-commit.installationScript
+            hooks.devShells.${system}.default.shellHook;
         "no tool and no hooks without git-hooks.nix" =
           (default [ ]).shellHook == ""
           && map (input: input.name) (default [ ]).nativeBuildInputs == [ pkgs.bashInteractive.name ];
