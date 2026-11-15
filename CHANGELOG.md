@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.2](https://github.com/flakeyard/atom-workspace/compare/v0.1.1...v0.1.2) (2026-11-15)
+
+
+### Bug Fixes
+
+* skip the git hooks in a worktree without the configuration link ([#15](https://github.com/flakeyard/atom-workspace/issues/15)) ([6a76d6c](https://github.com/flakeyard/atom-workspace/commit/6a76d6c731711bd38270c7ccd37c48602929d3e6))
+
 ## [0.1.1](https://github.com/flakeyard/atom-workspace/compare/v0.1.0...v0.1.1) (2026-11-14)
 
 
