@@ -15,6 +15,16 @@
       url = "git+https://github.com/numtide/treefmt-nix?ref=main&rev=0d6d739a833ba9a9c93034862e4a7b061a062a1c&shallow=1";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    atom-data-formats = {
+      url = "git+https://github.com/flakeyard/atom-data-formats?ref=v0&rev=0c643933ae631061f9fb6f1f26cf556db689f011&shallow=1";
+      inputs.treefmt-nix.follows = "treefmt-nix";
+      inputs.git-hooks.follows = "git-hooks";
+    };
+    atom-markdown = {
+      url = "git+https://github.com/flakeyard/atom-markdown?ref=v0&rev=0d3bca6f2fee47de01ecbe2ce1e49c0219870988&shallow=1";
+      inputs.treefmt-nix.follows = "treefmt-nix";
+      inputs.git-hooks.follows = "git-hooks";
+    };
     atom-nix = {
       url = "git+https://github.com/flakeyard/atom-nix?ref=v0&rev=d8e5b1d8f367d27181fbf6e2616c9e6c5ecbbafa&shallow=1";
       inputs.treefmt-nix.follows = "treefmt-nix";
@@ -23,6 +33,10 @@
     atom-shell = {
       url = "git+https://github.com/flakeyard/atom-shell?ref=v0&rev=c6191ba89fd4b4be340cbddfc3fdbeb7f82d3cc5&shallow=1";
       inputs.treefmt-nix.follows = "treefmt-nix";
+      inputs.git-hooks.follows = "git-hooks";
+    };
+    atom-text = {
+      url = "git+https://github.com/flakeyard/atom-text?ref=v0&rev=5d3eff102fc73979c01625325f07c13d2ea1a6c6&shallow=1";
       inputs.git-hooks.follows = "git-hooks";
     };
     import-tree.url = "git+https://github.com/vic/import-tree?ref=main&rev=eb1b52eaecc57f7c136d07ae8a93e724dfecac46&shallow=1";
@@ -69,8 +83,11 @@
         imports = [
           inputs.git-hooks.flakeModule
           inputs.treefmt-nix.flakeModule
+          inputs.atom-data-formats.flakeModules.default
+          inputs.atom-markdown.flakeModules.default
           inputs.atom-nix.flakeModules.default
           inputs.atom-shell.flakeModules.default
+          inputs.atom-text.flakeModules.default
           (atomFor { }).flakeModules.default
           # Every file under nix/ is a flake-parts module.
           (inputs.import-tree ./nix)
