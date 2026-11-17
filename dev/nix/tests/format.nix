@@ -1,7 +1,12 @@
 # In a git repository in the sandbox: the wrapper of treefmt, run from a
 # subdirectory, formats the whole project, and neither treefmt nor the git
 # hooks run by pre-commit touch the generated files.
-{ fixture, inputs, ... }:
+{
+  fixture,
+  inputs,
+  root,
+  ...
+}:
 {
   perSystem =
     { pkgs, system, ... }:
@@ -17,7 +22,8 @@
         );
       values =
         (fixture {
-          modules = [
+          source = root;
+          module.imports = [
             inputs.git-hooks.flakeModule
             inputs.treefmt-nix.flakeModule
             {

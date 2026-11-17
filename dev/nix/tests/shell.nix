@@ -33,7 +33,12 @@
         );
       gcc = name: shell name (pkgs: pkgs.mkShell { });
       clang = name: shell name (pkgs: pkgs.mkShell.override { stdenv = pkgs.clangStdenv; } { });
-      default = modules: (fixture { inherit modules; }).devShells.${system}.default;
+      default =
+        modules:
+        (fixture {
+          source = root;
+          module.imports = modules;
+        }).devShells.${system}.default;
       evaluates = modules: (builtins.tryEval (default modules).drvPath).success;
       # By name: mkDerivation puts the dev output of a package there.
       has =
@@ -48,7 +53,10 @@
         (noCC "flakeyard-a" [ ] { })
         (gcc "flakeyard-b")
       ];
-      hooks = fixture { modules = [ inputs.git-hooks.flakeModule ]; };
+      hooks = fixture {
+        source = root;
+        module.imports = [ inputs.git-hooks.flakeModule ];
+      };
       inherit (hooks.allSystems.${system}) pre-commit;
       own = default [
         (noCC "flakeyard-a" [ "hello" ] { FOO = "1"; })
@@ -66,7 +74,7 @@
         modules:
         (builtins.tryEval
           (fixture {
-            inherit modules;
+            module.imports = modules;
             source = root + "/dev/fixtures/committed-config";
           }).devShells.${system}.default.drvPath
         ).success;
