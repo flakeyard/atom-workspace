@@ -5,6 +5,7 @@
   facts,
   fixture,
   inputs,
+  root,
   ...
 }:
 {
@@ -21,11 +22,16 @@
       flake =
         generated:
         fixture {
-          modules = [
-            inputs.git-hooks.flakeModule
-            inputs.treefmt-nix.flakeModule
-          ]
-          ++ lib.optional (generated != null) { workspace.generated = generated; };
+          source = root;
+          # The definition in the module itself, not in a module it imports,
+          # which would come before the atom's.
+          module = {
+            imports = [
+              inputs.git-hooks.flakeModule
+              inputs.treefmt-nix.flakeModule
+            ];
+          }
+          // lib.optionalAttrs (generated != null) { workspace.generated = generated; };
         };
       generated = generated: (flake generated).debug.workspace.generated;
       values = (flake [ "own/" ]).allSystems.${system};

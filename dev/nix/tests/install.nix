@@ -3,13 +3,19 @@
 # of pre-commit in the checkout it starts in, installs the hook pre-commit into
 # the hooks every checkout shares and points core.hooksPath at them. A checkout
 # without the link skips the hooks; one with it runs them.
-{ fixture, inputs, ... }:
+{
+  fixture,
+  inputs,
+  root,
+  ...
+}:
 {
   perSystem =
     { pkgs, system, ... }:
     let
       flake = fixture {
-        modules = [
+        source = root;
+        module.imports = [
           inputs.git-hooks.flakeModule
           {
             perSystem = {

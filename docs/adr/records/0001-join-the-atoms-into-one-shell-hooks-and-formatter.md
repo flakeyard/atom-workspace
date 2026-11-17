@@ -81,11 +81,14 @@ flake-parts at `ea2630b7` and nixpkgs `nixos-26.05` showed:
 
 ### Inputs and form
 
-The public flake has no inputs and holds only
-`flakeModules.default = import ./nix inputs`. `nix/default.nix` sets `key` and
-`_file`, declares no options and imports the atom's modules; it names the unused
-inputs `_atomInputs`. No file reaches a file outside its own directory, so the
-atom needs no root of [FY-0039][fy-0039].
+The public flake holds only `flakeModules.default = import ./nix inputs`.
+Amended for [FY-0040][fy-0040]: its one input is `lib-atom`, which the atom pins
+in its own `flake.lock` and consumers neither declare nor follow.
+`nix/default.nix` sets `key` and `_file`, declares no options, imports the
+atom's modules and defines the root of the repository ([FY-0039][fy-0039]),
+which it passes to the function `warning` of lib-atom, the warning of the next
+major version with the same message. No other file reaches a file outside its
+own directory.
 
 The atom wires git-hooks.nix only when the option `pre-commit` exists, and
 treefmt-nix only when `treefmt` exists, with `lib.optionalAttrs` below `config`.
@@ -215,10 +218,15 @@ own outputs, and its checks evaluate on x86_64-linux and aarch64-linux:
   link skips the hooks and one with it runs them;
 - the warning of the next major version.
 
+As amended for [FY-0040][fy-0040], the dev flake fetches the revision of
+lib-atom that the root `flake.lock` pins, gives it to the atom and takes the
+fixture projects and the test of the warning from its `internal/testing`, with
+the message restated in the test.
+
 ## Constraints
 
-- The public flake MUST have no inputs and MUST hold only
-  `flakeModules.default = import ./nix inputs`.
+- The public flake MUST have no input other than `lib-atom` ([FY-0040][fy-0040])
+  and MUST hold only `flakeModules.default = import ./nix inputs`.
 - The atom MUST NOT import an upstream module and MUST set options of
   git-hooks.nix and treefmt-nix only when they exist, with `lib.optionalAttrs`,
   never `lib.mkIf`.
@@ -290,3 +298,5 @@ own outputs, and its checks evaluate on x86_64-linux and aarch64-linux:
   https://github.com/flakeyard/decisions/blob/main/docs/adr/records/0038-roll-out-the-atoms.md
 [fy-0039]:
   https://github.com/flakeyard/decisions/blob/main/docs/adr/records/0039-reach-repository-files-in-nix-from-one-root.md
+[fy-0040]:
+  https://github.com/flakeyard/decisions/blob/main/docs/adr/records/0040-share-code-through-lib-repositories.md

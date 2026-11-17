@@ -24,7 +24,12 @@
       ];
       gitHooks = inputs.git-hooks.flakeModule;
       treefmtNix = inputs.treefmt-nix.flakeModule;
-      flake = modules: fixture { inherit modules; };
+      flake =
+        modules:
+        fixture {
+          source = root;
+          module.imports = modules;
+        };
       alone = flake [ ];
       withHooks = flake [ gitHooks ];
       withTreefmt = flake [ treefmtNix ];

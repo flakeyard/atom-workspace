@@ -2,6 +2,7 @@
 # devShells.flakeyard-* fragment, with their environment variables and at
 # most one compiler, which installs the git hooks of git-hooks.nix when the
 # project imports it (FY-0017).
+{ warning }:
 { flake-parts-lib, self, ... }:
 {
   _file = ./shell.nix;
@@ -29,10 +30,6 @@
     }:
     let
       inherit (pkgs) lib;
-      warning = import ./warning.nix {
-        inherit lib;
-        file = ./next-major.nix;
-      };
       hooks = options ? pre-commit;
       # Every fragment, also devShells.flakeyard-project of the project.
       fragments = lib.filterAttrs (name: _: lib.hasPrefix "flakeyard-" name) config.devShells;
@@ -139,7 +136,7 @@
             atom-workspace: .pre-commit-config.yaml is committed, and git-hooks.nix
               links its own there; remove it from git and add it to .gitignore.''
         else
-          warning shell;
+          warning lib shell;
       devShells.default = lib.mkOverride 900 config.workspace.shell;
     };
 }

@@ -15,7 +15,9 @@ development shell, one set of git hooks and one formatter ([FY-0017][fy-0017],
 
 ## Inputs
 
-The atom has no inputs ([FY-0017][fy-0017]), so it needs no `follows`. It
+The atom has one input, [lib-atom][lib-atom], the functions that atoms share,
+which it pins in its own `flake.lock`; the project neither declares nor follows
+it ([FY-0040][fy-0040]), so the atom needs no `follows` ([FY-0017][fy-0017]). It
 imports neither git-hooks.nix nor treefmt-nix: it wires each one only when the
 project has it, from the atoms that import it or from the project's own imports.
 While the atom is `0.y.z`, only flakeyard's own repositories use it, in the form
@@ -214,8 +216,8 @@ The oldest supported revisions are those the tests run with: git-hooks.nix
 ## Public API
 
 Releases follow [semantic versioning][versioning] ([FY-0024][fy-0024]). The
-public API is `flakeModules.default` without inputs, the options
-`workspace.generated` with its grammar and its entries and
+public API is `flakeModules.default` without inputs that the project declares,
+the options `workspace.generated` with its grammar and its entries and
 `perSystem.workspace.shell`, the shells it joins and how, the values it sets
 with their priorities, the failures of evaluation, the file it reads, the
 supported systems and the oldest supported upstream revisions.
@@ -252,6 +254,11 @@ treefmt-nix and the atom as consumers do, with [atom-nix][atom-nix] and
 - `test-install`: the shell hook installs the git hooks; with a linked worktree,
   a commit in a checkout without the link skips them and one with it runs them;
 - `test-next-major`: the warning of the next major version.
+
+The dev flake has no input for lib-atom: it fetches the revision that the root
+[`flake.lock`](flake.lock) pins, gives it to the atom and takes the fixture
+projects and the test `test-next-major` from `internal/testing` of that revision
+([FY-0040][fy-0040]).
 
 Run the same commands as CI:
 
@@ -293,6 +300,9 @@ the atoms that will provide them are not released yet ([FY-0038][fy-0038]).
   https://github.com/flakeyard/decisions/blob/main/docs/adr/records/0034-check-every-repository-with-workflow-check.md
 [fy-0038]:
   https://github.com/flakeyard/decisions/blob/main/docs/adr/records/0038-roll-out-the-atoms.md
+[fy-0040]:
+  https://github.com/flakeyard/decisions/blob/main/docs/adr/records/0040-share-code-through-lib-repositories.md
+[lib-atom]: https://github.com/flakeyard/lib-atom
 [versioning]: https://github.com/flakeyard/.github/blob/main/VERSIONING.md
 [atom-nix]: https://github.com/flakeyard/atom-nix
 [atom-shell]: https://github.com/flakeyard/atom-shell
