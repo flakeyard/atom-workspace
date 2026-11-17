@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.3](https://github.com/flakeyard/atom-workspace/compare/v0.1.2...v0.1.3) (2026-11-17)
+
+
+### Bug Fixes
+
+* take the shared functions from lib-atom ([#18](https://github.com/flakeyard/atom-workspace/issues/18)) ([66fa431](https://github.com/flakeyard/atom-workspace/commit/66fa43101296d3b4182bf8ddb465143e065edae9))
+
 ## [0.1.2](https://github.com/flakeyard/atom-workspace/compare/v0.1.1...v0.1.2) (2026-11-15)
 
 
