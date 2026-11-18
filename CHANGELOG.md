@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.4](https://github.com/flakeyard/atom-workspace/compare/v0.1.3...v0.1.4) (2026-11-18)
+
+
+### Bug Fixes
+
+* **deps:** update flake input lib-atom to 6a962bf ([#22](https://github.com/flakeyard/atom-workspace/issues/22)) ([cbd61bc](https://github.com/flakeyard/atom-workspace/commit/cbd61bc34245665071f49170fe88e26e839e98b5))
+
 ## [0.1.3](https://github.com/flakeyard/atom-workspace/compare/v0.1.2...v0.1.3) (2026-11-17)
 
 
