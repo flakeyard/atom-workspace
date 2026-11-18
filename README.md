@@ -236,10 +236,13 @@ Open the repository in the flakeyard dev container: the editor reads
 
 The public [`flake.nix`](flake.nix) holds only the module ([FY-0017][fy-0017]).
 [`dev/flake.nix`](dev/flake.nix), with its own lock, imports git-hooks.nix,
-treefmt-nix and the atom as consumers do, with [atom-nix][atom-nix] and
-[atom-shell][atom-shell], and holds the tests:
+treefmt-nix and the atom as consumers do, with
+[atom-data-formats][atom-data-formats], [atom-markdown][atom-markdown],
+[atom-nix][atom-nix], [atom-shell][atom-shell] and [atom-text][atom-text], and
+holds the tests:
 
-- `nix`, `shell`, `treefmt`: the checks of this repository;
+- `data-formats`, `markdown`, `nix`, `shell`, `text`, `treefmt`: the checks of
+  this repository;
 - `test-evaluation`: the atom alone, with git-hooks.nix, with treefmt-nix and
   with both, and the values it sets;
 - `test-shell`: the fragments, variables, compilers and hooks of the shell, the
@@ -268,17 +271,18 @@ nix flake check --no-update-lock-file --no-build --all-systems ./dev
 ```
 
 CI runs [`test.yaml`](.github/workflows/test.yaml), which calls
-[workflow-check][workflow-check] with `./dev`: it checks `dev/flake.lock`,
-builds every check on x86_64 and arm64 runners, checks the pull request title
-and `renovate.json`, fails on configuration files of atom tools, and reports
-`check / required` ([FY-0034][fy-0034]). Its weekly run overrides nixpkgs,
-git-hooks.nix and treefmt-nix with their current branches.
-[`scorecard.yaml`](.github/workflows/scorecard.yaml) runs OpenSSF Scorecard, and
-[`release.yaml`](.github/workflows/release.yaml) releases the repository with
-[workflow-release][workflow-release].
+[workflow-check][workflow-check] with `./dev`: it checks `dev/flake.lock` and
+the root `flake.lock`, builds every check on x86_64 and arm64 runners, checks
+the pull request title and `renovate.json`, fails on configuration files of atom
+tools, and reports `check / required` ([FY-0034][fy-0034]). Its weekly run
+overrides nixpkgs, git-hooks.nix and treefmt-nix with their current branches and
+runs the app `markdown-links`, which checks every link of the Markdown files
+over the network. [`scorecard.yaml`](.github/workflows/scorecard.yaml) runs
+OpenSSF Scorecard, and [`release.yaml`](.github/workflows/release.yaml) releases
+the repository with [workflow-release][workflow-release].
 
-Before a pull request, also run prettier, markdownlint, typos and `reuse lint`;
-the atoms that will provide them are not released yet ([FY-0038][fy-0038]).
+Before a pull request, also run `reuse lint`; the atom that will provide it is
+not released yet ([FY-0038][fy-0038]).
 
 ## License
 
@@ -304,7 +308,10 @@ the atoms that will provide them are not released yet ([FY-0038][fy-0038]).
   https://github.com/flakeyard/decisions/blob/main/docs/adr/records/0040-share-code-through-lib-repositories.md
 [lib-atom]: https://github.com/flakeyard/lib-atom
 [versioning]: https://github.com/flakeyard/.github/blob/main/VERSIONING.md
+[atom-data-formats]: https://github.com/flakeyard/atom-data-formats
+[atom-markdown]: https://github.com/flakeyard/atom-markdown
 [atom-nix]: https://github.com/flakeyard/atom-nix
 [atom-shell]: https://github.com/flakeyard/atom-shell
+[atom-text]: https://github.com/flakeyard/atom-text
 [workflow-check]: https://github.com/flakeyard/workflow-check
 [workflow-release]: https://github.com/flakeyard/workflow-release
