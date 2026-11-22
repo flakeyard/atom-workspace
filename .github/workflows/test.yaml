@@ -10,6 +10,7 @@ on:
   schedule:
     - cron: "17 5 * * 1"
   workflow_dispatch: # dispatched checks of release pull requests (FY-0030)
+  merge_group: # the merge queue
 
 permissions: {}
 
