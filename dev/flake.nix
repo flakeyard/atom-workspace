@@ -2,7 +2,7 @@
   description = "atom-workspace: the tests of the atom and the checks of this repository.";
 
   inputs = {
-    nixpkgs.url = "git+https://github.com/NixOS/nixpkgs?ref=nixos-26.05&rev=ac588ef1c914865dad517b337ea0eb9694a4021c&shallow=1";
+    nixpkgs.url = "git+https://github.com/NixOS/nixpkgs?ref=nixos-26.05&rev=0dc498bfe49baeb18b0f9891e800b53bb2603193&shallow=1";
     flake-parts = {
       url = "git+https://github.com/hercules-ci/flake-parts?ref=main&rev=ea2630b7470978622c7689a1ff75d2b389175399&shallow=1";
       inputs.nixpkgs-lib.follows = "nixpkgs";
